@@ -1,0 +1,32 @@
+# **********************************************
+# This file is only for CEP of Micro
+# **********************************************
+
+# **********************************************
+# Folders will be handled here
+# **********************************************
+
+DataSheets/**
+
+Manual/**
+
+ScreenShots/**
+
+Code/**
+!Code/*.c
+
+
+# **********************************************
+# All text files
+# **********************************************
+*.txt
+
+# **********************************************
+# All Protous file is handled here
+# **********************************************
+
+# temp.pdsprj file 
+# this file is only for creating temp circuits
+temp.pdsprj
+
+*.workspace
