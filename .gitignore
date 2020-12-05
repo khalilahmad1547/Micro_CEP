@@ -30,5 +30,7 @@ Schematics/**
 # temp.pdsprj file 
 # this file is only for creating temp circuits
 temp.pdsprj
+*.pdsprj.*
+*.pdsbak
 
 *.workspace
