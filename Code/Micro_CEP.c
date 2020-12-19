@@ -12,17 +12,22 @@
 
 // Sensers Pins
 #define Senser_One PortB.F0
-#define Senser_Two PortB.F1
+#define Senser_Left PortB.F1        // Left Senser
 #define Senser_Three PortB.F2
-#define Senser_Four PortB.F3
+#define Senser_Head PortB.F3        // Head Sense
 #define Senser_Five PortB.F4
-#define Senser_Six PortB.F5
+#define Senser_Right PortB.F5       // Right Senser
 
 // Snesers default Ouput Value
 #define is_Line    1
 #define not_Line   0
 
 // Motor controlling Functions
+void Motor_Left_Stop();
+void Motor_Left_Start();
+
+void Motor_Right_Stop();
+void Motor_Right_Start();
 
 void main() {
      TrisD = 0;                 // making D port OUTPUT
@@ -38,23 +43,56 @@ void main() {
      Enable_Pin_Two = 1;
      while(1)
      {
-             if(Senser_One == not_Line && Senser_Two == not_Line)
+             if(Senser_Head == not_Line)
              {
-              // Move straight
-                 Input_Pin_One = 0;
-                 Input_Pin_Two = 1;
-                 Input_Pin_Three = 0;
-                 Input_Pin_Four = 1;
-                 Enable_Pin_One = 1;
-                 Enable_Pin_Two = 1;
+                  if(Senser_Left == not_Line && Senser_Right == not_Line)
+              {
+                 // Move straight
+                 Motor_Left_Start();
+                 Motor_Right_Start();
+              }
+             else if (Senser_Left == is_Line && Senser_Right == not_Line)
+              {
+               // Turn Left
+               Motor_Left_Stop();
+               Motor_Right_Start();
+              }
+             else if (Senser_Left == not_Line && Senser_Right == is_Line)
+              {
+                  // Turn Left
+                  Motor_Left_Start();
+                  Motor_Right_Stop();
+              }
              }
-             else if (Senser_One == not_Line && Senser_Two == is_Line)
+             else
              {
-              // Turn Right
-                 Input_Pin_One = 1;
-                 Input_Pin_Two = 0;
-                 Input_Pin_Three = 0;
-                 Input_Pin_Four = 0;
+              Motor_Left_Start();
+              Motor_Right_Start();
              }
      }
+}
+
+// Function Definations
+void Motor_Left_Stop()
+{
+    Input_Pin_One = 0;
+    Input_Pin_Two = 0;
+}
+
+void Motor_Left_Start()
+{
+    Input_Pin_One = 1;
+    Input_Pin_Two = 0;
+}
+
+void Motor_Right_Stop()
+{
+    Input_Pin_Three = 0;
+    Input_Pin_Four = 0;
+}
+
+void Motor_Right_Start()
+{
+    Input_Pin_Three = 1;
+    Input_Pin_Four = 0;
 }
