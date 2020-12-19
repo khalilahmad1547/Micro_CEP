@@ -48,8 +48,8 @@ void main() {
                   if(Senser_Left == no_Line && Senser_Right == no_Line)
                      {
                           // Dead END here
-                          Motor_Left_Stop();
-                          Motor_Right_Start();
+                          Motor_Left_Start();
+                          Motor_Right_Stop();
                      }
                   else if (Senser_Left == is_Line && Senser_Right == no_Line)
                       {
