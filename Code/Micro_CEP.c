@@ -20,7 +20,7 @@
 
 // Snesers default Ouput Value
 #define is_Line    1
-#define not_Line   0
+#define no_Line   0
 
 // Motor controlling Functions
 void Motor_Left_Stop();
@@ -32,7 +32,7 @@ void Motor_Right_Start();
 void main() {
      TrisD = 0;                     // making D port OUTPUT
      TrisC = 0;                     // Making C port OUTPUT
-     
+
      TrisB = 0xff;                  // Making Port B INPUT
      // by default running staraight
      Input_Pin_One = 0;
@@ -43,21 +43,21 @@ void main() {
      Enable_Pin_Two = 1;
      while(1)
      {
-             if(Senser_Head == not_Line)
+             if(Senser_Head == no_Line)
              {
-                  if(Senser_Left == not_Line && Senser_Right == not_Line)
+                  if(Senser_Left == no_Line && Senser_Right == no_Line)
                      {
                           // Dead END here
                           Motor_Left_Stop();
                           Motor_Right_Start();
                      }
-                  else if (Senser_Left == is_Line && Senser_Right == not_Line)
+                  else if (Senser_Left == is_Line && Senser_Right == no_Line)
                       {
                           // Turn Left
                           Motor_Left_Stop();
                           Motor_Right_Start();
                       }
-                  else if (Senser_Left == not_Line && Senser_Right == is_Line)
+                  else if (Senser_Left == no_Line && Senser_Right == is_Line)
                        {
                           // Turn Right
                           Motor_Left_Start();
