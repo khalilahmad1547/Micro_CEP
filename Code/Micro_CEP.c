@@ -18,11 +18,18 @@
 #define Senser_Five PortB.F4
 #define Senser_Six PortB.F5
 
+// Snesers default Ouput Value
+#define is_Line    1
+#define not_Line   0
+
 // Motor controlling Functions
 
 void main() {
      TrisD = 0;                 // making D port OUTPUT
      TrisC = 0;                 // Making C port OUTPUT
+     
+     TrisB = 0xff;              // Making Port B INPUT
+     // by default running staraight
      Input_Pin_One = 0;
      Input_Pin_Two = 1;
      Input_Pin_Three = 0;
@@ -31,6 +38,23 @@ void main() {
      Enable_Pin_Two = 1;
      while(1)
      {
-
+             if(Senser_One == not_Line && Senser_Two == not_Line)
+             {
+              // Move straight
+                 Input_Pin_One = 0;
+                 Input_Pin_Two = 1;
+                 Input_Pin_Three = 0;
+                 Input_Pin_Four = 1;
+                 Enable_Pin_One = 1;
+                 Enable_Pin_Two = 1;
+             }
+             else if (Senser_One == not_Line && Senser_Two == is_Line)
+             {
+              // Turn Right
+                 Input_Pin_One = 1;
+                 Input_Pin_Two = 0;
+                 Input_Pin_Three = 0;
+                 Input_Pin_Four = 0;
+             }
      }
 }
