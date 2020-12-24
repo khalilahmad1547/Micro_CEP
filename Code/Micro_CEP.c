@@ -43,38 +43,70 @@ void main() {
      Enable_Pin_Two = 1;
      while(1)
      {
-             if(Senser_Head == no_Line)
-             {
-                  if(Senser_Left == no_Line && Senser_Right == no_Line)
-                     {
-                          // Dead END here
-                          Motor_Left_Start();
-                          Motor_Right_Stop();
-                     }
-                  else if (Senser_Left == is_Line && Senser_Right == no_Line)
-                      {
-                          // Turn Left
-                          Motor_Left_Stop();
-                          Motor_Right_Start();
-                      }
-                  else if (Senser_Left == no_Line && Senser_Right == is_Line)
-                       {
-                          // Turn Right
-                          Motor_Left_Start();
-                          Motor_Right_Stop();
-                       }
-                  else if (Senser_Left == is_Line && Senser_Right == is_Line)
-                       {
-                          // Turn Right
-                          Motor_Left_Start();
-                          Motor_Right_Stop();
-                       }
-             }
-             else
-             {
-              Motor_Left_Start();
-              Motor_Right_Start();
-             }
+      if(Senser_Head == no_Line && Senser_Right == no_Line && Senser_Left == no_Line)
+      {
+       // Dead End Occured
+       // Take 360* turn
+       Motor_Right_Start();
+       Motor_Left_Stop();
+      
+      }
+      else if(Senser_Head == no_Line && Senser_Right == no_Line && Senser_Left == is_Line)
+      {
+       // Only Left Path exist
+       // Take a Left turn
+       Motor_Right_Start();
+       Motor_Left_Stop();
+      
+      }
+      else if(Senser_Head == no_Line && Senser_Right == is_Line && Senser_Left == no_Line)
+      {
+       // Only Right path exist
+       // Turn Right
+       Motor_Right_Stop();
+       Motor_Left_Start();
+
+      }
+      else if(Senser_Head == no_Line && Senser_Right == is_Line && Senser_Left == is_Line)
+      {
+       // Right & left Path exist
+       // Turn Right
+       Motor_Right_Stop();
+       Motor_Left_Start();
+
+      }
+      else if(Senser_Head == is_Line && Senser_Right == no_Line && Senser_Left == no_Line)
+      {
+       // Only straght path exist
+       // Go Straight
+       Motor_Right_Start();
+       Motor_Left_Start();
+
+      }
+      else if(Senser_Head == is_Line && Senser_Right == no_Line && Senser_Left == is_Line)
+      {
+       // Stright & Left Path exist
+       // Go Stright
+       Motor_Right_Start();
+       Motor_Left_Start();
+
+      }
+      else if(Senser_Head == is_Line && Senser_Right == is_Line && Senser_Left == no_Line)
+      {
+       // Stright & Right Path exist
+       // Go Right
+       Motor_Right_Stop();
+       Motor_Left_Start();
+
+      }
+      else if(Senser_Head == is_Line && Senser_Right == is_Line && Senser_Left == is_Line)
+      {
+       // All stright, Right & left path exist
+       // Go Right
+       Motor_Right_Stop();
+       Motor_Left_Start();
+
+      }
      }
 }
 
