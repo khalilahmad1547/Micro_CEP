@@ -29,6 +29,32 @@ void Motor_Left_Start();
 void Motor_Right_Stop();
 void Motor_Right_Start();
 
+// For implementing maze solving
+
+/****** All th Golbel variables****/
+/* 
+ "address" A globel address for EEPROM it will
+ Be pointing to the last occupide space in EEPROM
+*/
+int address = 0;
+/*
+ "last_written"
+ is just a varibale to store the last written so we may not
+ write it again
+ It would be a unique number for all the checks below in "void main()"
+*/
+int last_written = -1;
+/*
+"dead_end" is used as a flag to remember that a dead end is
+encountered or not
+dead_end == 1 => dead end encountered
+dead_end == 0 => No dead end encountered
+*/
+int dead_end = 0;
+
+/****** All th functions ****/
+void buildPath(char my_turn, int uniq_num);
+
 void main() {
      TrisD = 0;                     // making D port OUTPUT
      TrisC = 0;                     // Making C port OUTPUT
@@ -49,6 +75,12 @@ void main() {
        // Take 360* turn
        Motor_Right_Start();
        Motor_Left_Stop();
+       
+       // For Maze solving
+       buildPath('B', 0);
+       
+       // Rasing Dead end flag
+       dead_end = 1;
       
       }
       else if(Senser_Head == no_Line && Senser_Right == no_Line && Senser_Left == is_Line)
@@ -57,6 +89,9 @@ void main() {
        // Take a Left turn
        Motor_Right_Start();
        Motor_Left_Stop();
+       
+       // For Maze solving
+       buildPath('L', 1);
       
       }
       else if(Senser_Head == no_Line && Senser_Right == is_Line && Senser_Left == no_Line)
@@ -65,6 +100,9 @@ void main() {
        // Turn Right
        Motor_Right_Stop();
        Motor_Left_Start();
+       
+       // For Maze solving
+       buildPath('R', 2);
 
       }
       else if(Senser_Head == no_Line && Senser_Right == is_Line && Senser_Left == is_Line)
@@ -73,6 +111,9 @@ void main() {
        // Turn Right
        Motor_Right_Stop();
        Motor_Left_Start();
+       
+       // For Maze solving
+       buildPath('R', 3);
 
       }
       else if(Senser_Head == is_Line && Senser_Right == no_Line && Senser_Left == no_Line)
@@ -81,6 +122,10 @@ void main() {
        // Go Straight
        Motor_Right_Start();
        Motor_Left_Start();
+       
+       // For Maze solving
+       // 'N' is for not storing
+       buildPath('N', 4);
 
       }
       else if(Senser_Head == is_Line && Senser_Right == no_Line && Senser_Left == is_Line)
@@ -89,6 +134,9 @@ void main() {
        // Go Stright
        Motor_Right_Start();
        Motor_Left_Start();
+       
+       // For Maze solving
+       buildPath('S', 5);
 
       }
       else if(Senser_Head == is_Line && Senser_Right == is_Line && Senser_Left == no_Line)
@@ -97,6 +145,9 @@ void main() {
        // Go Right
        Motor_Right_Stop();
        Motor_Left_Start();
+       
+       // For Maze solving
+       buildPath('R', 6);
 
       }
       else if(Senser_Head == is_Line && Senser_Right == is_Line && Senser_Left == is_Line)
@@ -105,6 +156,9 @@ void main() {
        // Go Right
        Motor_Right_Stop();
        Motor_Left_Start();
+       
+       // For Maze solving
+       buildPath('R', 7);
 
       }
      }
@@ -133,4 +187,69 @@ void Motor_Left_Start()
 {
     Input_Pin_Three = 1;
     Input_Pin_Four = 0;
+}
+
+void buildPath(char my_turn, int uniq_num)
+{
+     if(last_written != uniq_num)
+     {
+      if(my_turn != 'N')
+      {
+       // Stil have to write path
+       EEPROM_Write(address, my_turn);
+       address = address + 1;
+       // Updating Last turn status
+       last_written = uniq_num;
+      }
+     }
+     // PATH optimization
+     if(dead_end == 1)
+     {
+       // Optimizing Path
+       char s_last_turn = EEPROM_Read(address - 3);
+       char last_turn =  EEPROM_Read(address - 1);
+       
+       if(s_last_turn == 'R' && last_turn == 'L')
+       {
+           // PATH is RBL & optimized as  B
+           EEPROM_Write(address - 3, 'B');
+           address = address - 2;       // Updating address
+       }
+       else if(s_last_turn == 'L' && last_turn == 'L')
+       {
+           // PATH is LBL & optimized as  S
+           EEPROM_Write(address - 3, 'S');
+           address = address - 2;       // Updating address
+       }
+       else if(s_last_turn == 'L' && last_turn == 'R')
+       {
+           // PATH is LBR & optimized as  B
+           EEPROM_Write(address - 3, 'B');
+           address = address - 2;       // Updating address
+       }
+       else if(s_last_turn == 'S' && last_turn == 'L')
+       {
+           // PATH is SBL & optimized as  S
+           EEPROM_Write(address - 3, 'R');
+           address = address - 2;       // Updating address
+       }
+       else if(s_last_turn == 'S' && last_turn == 'S')
+       {
+           // PATH is SBS & optimized as  S
+           EEPROM_Write(address - 3, 'B');
+           address = address - 2;       // Updating address
+       }
+       else if(s_last_turn == 'L' && last_turn == 'S')
+       {
+           // PATH is LBS & optimized as  R
+           EEPROM_Write(address - 3, 'R');
+           address = address - 2;       // Updating address
+       }
+       
+       // Updating "dead_end" Flag
+       if(EEPROM_Read(address - 1) != 'B')
+       {
+         dead_end = 0;
+       }
+     }
 }
