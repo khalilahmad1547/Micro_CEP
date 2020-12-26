@@ -198,9 +198,9 @@ void buildPath(char my_turn, int uniq_num)
        // Stil have to write path
        EEPROM_Write(address, my_turn);
        address = address + 1;
+      }
        // Updating Last turn status
        last_written = uniq_num;
-      }
      }
      // PATH optimization
      if(dead_end == 1)
@@ -213,6 +213,12 @@ void buildPath(char my_turn, int uniq_num)
        {
            // PATH is RBL & optimized as  B
            EEPROM_Write(address - 3, 'B');
+           address = address - 2;       // Updating address
+       }
+       else if(s_last_turn == 'R' && last_turn == 'R')
+       {
+           // PATH is LBL & optimized as  S
+           EEPROM_Write(address - 3, 'S');
            address = address - 2;       // Updating address
        }
        else if(s_last_turn == 'L' && last_turn == 'L')
