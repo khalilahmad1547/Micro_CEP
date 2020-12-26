@@ -22,6 +22,15 @@
 #define is_Line    1
 #define no_Line   0
 
+// Status LED
+#define Status_LED LatD.F6
+
+// Button
+/*
+ This button be used to start following optimized path
+ */
+#define follow PortB.F7
+
 // Motor controlling Functions
 void Motor_Left_Stop();
 void Motor_Left_Start();
@@ -56,6 +65,11 @@ int dead_end = 0;
 void buildPath(char my_turn, int uniq_num);
 
 void main() {
+     // All the main varibales
+     // For following optimized path
+     char dir_to_take;
+
+     // All the pin configurations
      TrisD = 0;                     // making D port OUTPUT
      TrisC = 0;                     // Making C port OUTPUT
 
@@ -156,10 +170,76 @@ void main() {
        // Go Right
        Motor_Right_Stop();
        Motor_Left_Start();
-       
+       //if(END)
+       //{
+       // break;
+       //}
        // For Maze solving
        buildPath('R', 7);
 
+      }
+     }
+     
+     // blinking and waiting for the switch to turn on
+     while(follow != 1)      // Not pressed
+     {
+      Status_LED = ~Status_LED;
+      delay_ms(500);
+      Status_LED = ~Status_LED;
+      delay_ms(500);
+     }
+     
+     // Following the Optimized Path
+     address = 0;               // re-initilizing address pointer
+     
+     while(1)
+     {
+      if(Senser_Head == is_Line && Senser_Right == no_Line && Senser_Left == no_Line)
+      {
+       // Only straght path exist
+       // A normal Path
+       
+       // Go Straight
+       Motor_Right_Start();
+       Motor_Left_Start();
+      }
+      else
+      {
+       // Any turn is detected
+       // Have to take a right turn as determined by optimization
+       
+       dir_to_take = EEPROM_Read(address);
+       if(dir_to_take == 'R')
+       {
+        // Go Right
+        Motor_Right_Stop();
+        Motor_Left_Start();
+       }
+       else if(dir_to_take == 'L')
+       {
+        // Go Left
+        Motor_Right_Start();
+        Motor_Left_Stop();
+       }
+       else if(dir_to_take == 'S')
+       {
+        // Go Stright
+        Motor_Right_Start();
+        Motor_Left_Start();
+       }
+       else if(dir_to_take == 'N')
+       {
+        // End of the Maze
+        
+        // Stop here
+        Motor_Right_Stop();
+        Motor_Left_Stop();
+        // getting out of loop
+        break;
+       }
+       
+       // updating addreaa
+       address = address + 1;
       }
      }
 }
