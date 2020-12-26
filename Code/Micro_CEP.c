@@ -179,6 +179,10 @@ void main() {
        {
         Motor_Right_Stop();
         Motor_Left_Stop();
+        
+        // For Maze solving
+        buildPath('E', 8);
+        
         break;
        }
 
@@ -207,6 +211,7 @@ void main() {
        // Go Straight
        Motor_Right_Start();
        Motor_Left_Start();
+       delay_ms(5000);
       }
       else
       {
@@ -219,18 +224,21 @@ void main() {
         // Go Right
         Motor_Right_Stop();
         Motor_Left_Start();
+        delay_ms(1000);
        }
        else if(dir_to_take == 'L')
        {
         // Go Left
         Motor_Right_Start();
         Motor_Left_Stop();
+        delay_ms(1000);
        }
        else if(dir_to_take == 'S')
        {
         // Go Stright
         Motor_Right_Start();
         Motor_Left_Start();
+        delay_ms(1000);
        }
        else if(dir_to_take == 'N')
        {
