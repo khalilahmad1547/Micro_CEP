@@ -52,7 +52,7 @@ dead_end == 0 => No dead end encountered
 */
 int dead_end = 0;
 
-/****** All th functions ****/
+/****** All th functions for path optimization ****/
 void buildPath(char my_turn, int uniq_num);
 
 void main() {
