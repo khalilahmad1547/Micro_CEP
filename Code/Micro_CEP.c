@@ -170,12 +170,17 @@ void main() {
        // Go Right
        Motor_Right_Stop();
        Motor_Left_Start();
-       //if(END)
-       //{
-       // break;
-       //}
+       
        // For Maze solving
        buildPath('R', 7);
+       // For detecting Maze END
+       delay_ms(5000);
+       if(Senser_Head == is_Line && Senser_Right == is_Line && Senser_Left == is_Line)
+       {
+        Motor_Right_Stop();
+        Motor_Left_Stop();
+        break;
+       }
 
       }
      }
@@ -241,6 +246,12 @@ void main() {
        // updating addreaa
        address = address + 1;
       }
+     }
+
+     // End signal
+     while(1)
+     {
+      Status_LED = 1;
      }
 }
 
